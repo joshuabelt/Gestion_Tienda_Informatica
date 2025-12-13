@@ -1,0 +1,159 @@
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #46ECD5 30%, #2A9689 70%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.container-general {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.container-1,
+.container-2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.proveedores, .productos, .clientes {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    align-items: center;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 420px;
+    min-height: 260px;
+    padding: 15px 10px 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    box-sizing: border-box;
+}
+
+.proveedores { background-color: #dc3545; }
+.productos   { background-color: #28a745; }
+.clientes    { background-color: #007bff; }
+
+.titulo-seccion {
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 10px;
+    padding: 12px 10px;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.proveedor-img, .producto-img, .cliente-img {
+    width: 100%;
+    max-width: 220px;  
+    height: auto;
+    margin: 15px 0;
+    object-fit: contain;
+    display: block;
+}
+
+.boton {
+    width: 85%;
+    max-width: 200px;
+    padding: 12px 20px;
+    background-color: #90A1B9;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+}
+
+.boton:hover {
+    background-color: #45556C;
+    transform: scale(1.05);
+}
+
+.inicio-button-container {
+    text-align: center;
+    margin: 30px 0;
+    width: 100%;
+}
+
+.btn-back {
+    background-color: #6c757d;
+    color: white;
+    padding: 14px 28px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+    display: inline-block;
+    transition: 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #575f64;
+    transform: scale(1.05);
+}
+
+@media (max-width: 900px) {
+    .proveedores, .productos, .clientes {
+        max-width: 90%;
+        min-height: 240px;
+    }
+
+    .titulo-seccion {
+        font-size: 20px;
+    }
+
+    .boton {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    .proveedores, .productos, .clientes {
+        max-width: 95%;
+        min-height: 220px;
+        padding: 12px;
+    }
+
+    .proveedor-img, .producto-img, .cliente-img {
+        max-width: 180px;
+    }
+
+    .titulo-seccion {
+        font-size: 18px;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 400px) {
+    .proveedores, .productos, .clientes {
+        min-height: 200px;
+    }
+
+    .proveedor-img, .producto-img, .cliente-img {
+        max-width: 150px;
+    }
+
+    .boton {
+        font-size: 14px;
+    }
+
+    .titulo-seccion {
+        font-size: 16px;
+    }
+}
+
