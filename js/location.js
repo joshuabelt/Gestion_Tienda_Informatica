@@ -1,119 +1,75 @@
-let dataPaises = [];
-let dataDepartamentos = [];
-let dataMunicipios = [];
-
-/**
- * Cargar archivos JSON
- */
-async function loadLocationData() {
-    try {
-        const [paisesRes, deptosRes, municipiosRes] = await Promise.all([
-            fetch("../data/countries(1).json"),
-            fetch("../data/states.json"),
-            fetch("../data/citiesjson/cities.json")
-        ]);
-
-        dataPaises = await paisesRes.json();
-        dataDepartamentos = await deptosRes.json();
-        dataMunicipios = await municipiosRes.json();
-
-        loadPaises();
-    } catch (error) {
-        console.error("Error cargando datos de ubicación:", error);
-    }
-}
-
-/**
- * Llenar select de países
- */
-function loadPaises(selected = "") {
-    const selectPais = document.getElementById("pais");
-    selectPais.innerHTML = `<option value="">Seleccione un país</option>`;
-
-    dataPaises.forEach(p => {
-        const option = document.createElement("option");
-        option.value = p.codigo;
-        option.textContent = p.nombre;
-
-        if (selected && selected === p.codigo) option.selected = true;
-
-        selectPais.appendChild(option);
-    });
-
-    if (selected) loadDepartamentos(selected);
-}
-
-/**
- * Llenar departamentos por país
- */
-function loadDepartamentos(codigoPais, selected = "") {
-    const selectDepto = document.getElementById("departamento");
-    const selectMuni = document.getElementById("municipio");
-
-    selectDepto.innerHTML = `<option value="">Seleccione un departamento</option>`;
-    selectMuni.innerHTML = `<option value="">Seleccione un municipio</option>`;
-
-    const filtered = dataDepartamentos.filter(d => d.pais === codigoPais);
-
-    filtered.forEach(dep => {
-        const option = document.createElement("option");
-        option.value = dep.codigo;
-        option.textContent = dep.nombre;
-
-        if (selected && selected === dep.codigo) option.selected = true;
-
-        selectDepto.appendChild(option);
-    });
-
-    if (selected) loadMunicipios(selected);
-}
-
-/**
- * Llenar municipios por departamento
- */
-function loadMunicipios(codigoDepto, selected = "") {
-    const selectMuni = document.getElementById("municipio");
-    selectMuni.innerHTML = `<option value="">Seleccione un municipio</option>`;
-
-    const filtered = dataMunicipios.filter(m => m.departamento === codigoDepto);
-
-    filtered.forEach(m => {
-        const option = document.createElement("option");
-        option.value = m.codigo;
-        option.textContent = m.nombre;
-
-        if (selected && selected === m.codigo) option.selected = true;
-
-        selectMuni.appendChild(option);
-    });
-}
-
-/**
- * Eventos de cambio
- */
 document.addEventListener("DOMContentLoaded", () => {
-    loadLocationData();
 
-    document.getElementById("pais").addEventListener("change", (e) => {
-        loadDepartamentos(e.target.value);
+  const paisSelect = document.getElementById("pais");
+  const deptoSelect = document.getElementById("departamento");
+  const muniSelect = document.getElementById("municipio");
+
+  if (!paisSelect || !deptoSelect || !muniSelect) return;
+
+  const API_KEY = "Q3NLa2JUOVhKTTFWYlQ0c3hjWHBubHFZR2hPeUtFTnJGZG5lcDJPcw==";
+  const BASE_URL = "https://api.countrystatecity.in/v1";
+
+  const headers = {
+    "X-CSCAPI-KEY": API_KEY
+  };
+
+  // 🔹 Cargar países
+  fetch(`${BASE_URL}/countries`, { headers })
+    .then(res => res.json())
+    .then(countries => {
+
+      paisSelect.innerHTML = `<option value="">Seleccione un país</option>`;
+
+      countries.forEach(c => {
+        const selected = (OLD?.pais === c.iso2) ? 'selected' : '';
+        paisSelect.innerHTML += `
+          <option value="${c.iso2}" ${selected}>${c.name}</option>`;
+      });
+
+      if (OLD?.pais) paisSelect.dispatchEvent(new Event('change'));
     });
 
-    document.getElementById("departamento").addEventListener("change", (e) => {
-        loadMunicipios(e.target.value);
-    });
+  paisSelect.addEventListener("change", () => {
+
+    deptoSelect.innerHTML = `<option value="">Seleccione un departamento</option>`;
+    muniSelect.innerHTML = `<option value="">Seleccione un municipio</option>`;
+
+    if (!paisSelect.value) return;
+
+    fetch(`${BASE_URL}/countries/${paisSelect.value}/states`, { headers })
+      .then(res => res.json())
+      .then(states => {
+
+        states.forEach(s => {
+          const selected = (OLD?.departamento === s.iso2) ? 'selected' : '';
+          deptoSelect.innerHTML += `
+            <option value="${s.iso2}" ${selected}>${s.name}</option>`;
+        });
+
+        if (OLD?.departamento) deptoSelect.dispatchEvent(new Event('change'));
+      });
+  });
+
+  deptoSelect.addEventListener("change", () => {
+
+    muniSelect.innerHTML = `<option value="">Seleccione un municipio</option>`;
+
+    if (!paisSelect.value || !deptoSelect.value) return;
+
+    fetch(`${BASE_URL}/countries/${paisSelect.value}/states/${deptoSelect.value}/cities`, { headers })
+      .then(res => res.json())
+      .then(cities => {
+
+        cities.forEach(city => {
+          const selected = (OLD?.municipio === city.name) ? 'selected' : '';
+          muniSelect.innerHTML += `
+            <option value="${city.name}" ${selected}>${city.name}</option>`;
+        });
+      });
+  });
+
 });
 
-/**
- * Función para edición de clientes
- * Se mandan los valores actuales guardados en la BD
- */
-function preloadLocation(pais, departamento, municipio) {
-    // Cargar países y seleccionar el correcto
-    loadPaises(pais);
 
-    // Cargar departamentos del país y seleccionar el correcto
-    loadDepartamentos(pais, departamento);
 
-    // Cargar municipios del departamento y seleccionar el correcto
-    loadMunicipios(departamento, municipio);
-}
+
