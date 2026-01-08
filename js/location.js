@@ -35,18 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
     muniSelect.innerHTML = `<option value="">Seleccione un municipio</option>`;
 
     if (!paisSelect.value) return;
+    
+    if (window.iti) {
+    iti.setCountry(paisSelect.value.toLowerCase());
+    }
 
     fetch(`${BASE_URL}/countries/${paisSelect.value}/states`, { headers })
       .then(res => res.json())
       .then(states => {
 
         states.forEach(s => {
-          const selected = (OLD?.departamento === s.iso2) ? 'selected' : '';
           deptoSelect.innerHTML += `
             <option value="${s.iso2}" ${selected}>${s.name}</option>`;
         });
-
-        if (OLD?.departamento) deptoSelect.dispatchEvent(new Event('change'));
       });
   });
 

@@ -31,8 +31,6 @@ if (isset($_GET['delete_success'])) {
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../styles/formularios.css">
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
     <title>Clientes</title>
     <style>
         .back-button-container {
@@ -180,22 +178,7 @@ if (isset($_GET['delete_success'])) {
 <script>
 const OLD = <?= json_encode($old ?? []) ?>;
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
-<script src="../js/telefono.js"></script>
 <script src="../js/location.js"></script>
-<script>
-document.querySelector("form").addEventListener("submit", function(e) {
-    if (!iti.isValidNumber()) {
-        alert("Número de teléfono inválido");
-        e.preventDefault();
-        return;
-    }
-
-    telefono.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
-    pais_iso.value = iti.getSelectedCountryData().iso2.toUpperCase();
-});
-</script>
 <?php unset($_SESSION['old']); ?>
 </body>
 </html>
